@@ -3,16 +3,39 @@ const User = require("../model/userModel");
 
 exports.getMyPosts = async (req, res) => {
   const userId = req._id;
+
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate("myPosts");
     if (!user) {
       return res.status(404).send({ message: "User not found!" });
     }
     return res.status(200).send({ myPosts: user.myPosts });
   } catch (error) {
+    return res.status(500).send({ message: "Doubt post not found!" });
+  }
+};
+exports.getDoubt = async (req, res) => {
+  const { doubtId } = req.body;
+  try {
+    const post = await Post.findById(doubtId).populate("owner");
+    if (!post) {
+      return res.status(404).send({ message: "Post not Found!" });
+    }
+    return res.status(200).send({
+      title:post.title,
+      description:post.description,
+      attachments:post.attachments,
+      comments:post.comments,
+      createdAt:post.createdAt,
+      author:{
+        username:post.owner.username,
+        avatar:post.owner.picture
+      }
+    });
+  } catch (error) {
     return res
       .status(500)
-      .send({ message: "Couldn't get the posts! try again" });
+      .send({ message: "Couldn't get the posts! Try again." });
   }
 };
 
@@ -33,7 +56,7 @@ exports.createNewPost = async (req, res) => {
     user.myPosts.push(post._id);
     await user.save();
 
-    return res.status(201).send({ newPost: post });
+    return res.status(201).send(post);
   } catch (error) {
     return res.status(500).send({ message: "Error creating post!" });
   }

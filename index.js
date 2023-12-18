@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
 const passport = require("passport");
 const googleRouter = require("./routes/googleRouter.js");
+const postRouter = require("./routes/postRouter.js");
 const app = express();
 require("./passport-config.js");
 dotenv.config();
@@ -32,6 +33,7 @@ app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 //routes
+app.use("/", postRouter);
 app.use("/user", userRouter);
 app.use("/google", googleRouter);
 

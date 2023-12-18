@@ -10,14 +10,21 @@ const postSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    comments: [{ type: mongoose.Schema.Types.ObjectId }],
+    attachments: [{ type: String }],
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
     owner: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
   },
   { timestamps: true }
 );
 
-const Post = mongoose.model("post", postSchema);
+const Post = mongoose.model("Post", postSchema);
 module.exports = Post;

@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
     try {
-        const uri = process.env.DATABASE_URI
+        const uri = process.env.MONGO_URI
         const DB_CONFIG = {
-            dbName: "Sociopost",
+            dbName: "100xDoubts",
             useNewUrlParser: true,
             useUnifiedTopology: true
         }

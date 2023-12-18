@@ -28,6 +28,11 @@ const UserSchema = mongoose.Schema(
     googleId: {
       type: String,
     },
+    myPosts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+      },
+    ],
   },
   { timestapms: true }
 );

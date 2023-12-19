@@ -103,7 +103,7 @@ exports.upvoteDoubt = async (req, res) => {
 exports.getAllPosts = async (req, res) => {
   const page = req.params.page || 1;
   const filterMode = req.params.filter || "latest";
-  const pageSize = 20;
+  const pageSize = 50;
   try {
     const skip = (page - 1) * pageSize;
 

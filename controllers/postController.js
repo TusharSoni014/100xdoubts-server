@@ -75,7 +75,6 @@ exports.upvoteDoubt = async (req, res) => {
       return res.status(404).send({ message: "Post not found" });
     }
     const hasUpvoted = post.upvotes.includes(userId);
-
     if (hasUpvoted) {
       post.upvotes = post.upvotes.filter(
         (id) => id.toString() !== userId.toString()
@@ -103,30 +102,66 @@ exports.upvoteDoubt = async (req, res) => {
 
 exports.getAllPosts = async (req, res) => {
   const page = req.params.page || 1;
-  const pageSize = 10;
+  const filterMode = req.params.filter || "latest";
+  const pageSize = 20;
   try {
     const skip = (page - 1) * pageSize;
+
+    let sortCriteria;
+    switch (filterMode) {
+      case "latest":
+        sortCriteria = { createdAt: -1 };
+        break;
+      case "asc-upvotes":
+        sortCriteria = { upvotes: -1 };
+        break;
+      case "des-upvotes":
+        sortCriteria = { upvotes: 1 };
+        break;
+      default:
+        sortCriteria = { createdAt: -1 };
+    }
+
     const posts = await Post.find({})
-      .sort({ createdAt: -1 })
+      .sort(sortCriteria)
       .skip(skip)
       .limit(pageSize)
       .populate("owner");
 
-    const sortedPosts = posts.map((post) => {
-      return {
-        title: post?.title,
-        description: post?.description,
-        url: post?._id,
-        comments: post?.comments,
-        upvotes: post?.upvotes,
-        createdAt: post?.createdAt,
-        author: {
-          username: post?.owner?.username,
-          avatar: post?.owner?.picture,
-        },
-      };
-    });
+    const sortedPosts = posts.map((post) => ({
+      title: post?.title,
+      description: post?.description,
+      url: post?._id,
+      comments: post?.comments,
+      upvotes: post?.upvotes,
+      createdAt: post?.createdAt,
+      author: {
+        username: post?.owner?.username,
+        avatar: post?.owner?.picture,
+      },
+    }));
+
     return res.status(200).json(sortedPosts);
+  } catch (error) {
+    return res.status(500).send({ message: "Error retrieving posts!" });
+  }
+};
+
+exports.create100 = async (req, res) => {
+  const userId = req._id;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    for (let index = 0; index < 100; index++) {
+      await Post.create({
+        title: `post title ${index + 1}`,
+        description: `post description`,
+        owner: userId,
+      });
+    }
+    return res.status(200).json({ message: "post created successfully!" });
   } catch (error) {
     return res.status(500).send({ message: "Error retrieving posts!" });
   }

@@ -22,6 +22,9 @@ const postSchema = mongoose.Schema(
       required: true,
     },
     upvotes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    topic: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

@@ -22,12 +22,21 @@ const postSchema = mongoose.Schema(
       required: true,
     },
     upvotes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    upvoteCount: {
+      type: Number,
+      default: 0,
+    },
     topic: {
       type: String,
     },
   },
   { timestamps: true }
 );
+
+postSchema.pre("save", function (next) {
+  this.upvoteCount = this.upvotes.length;
+  next();
+});
 
 const Post = mongoose.model("Post", postSchema);
 module.exports = Post;

@@ -26,6 +26,8 @@ exports.getDoubt = async (req, res) => {
       description: post.description,
       attachments: post.attachments,
       comments: post.comments,
+      upvotes: post.upvotes,
+      upvoteCount: post?.upvoteCount,
       createdAt: post.createdAt,
       author: {
         username: post.owner.username,
@@ -104,6 +106,7 @@ exports.getAllPosts = async (req, res) => {
   const page = req.params.page || 1;
   const filterMode = req.params.filter || "latest";
   const pageSize = 50;
+
   try {
     const skip = (page - 1) * pageSize;
 
@@ -113,10 +116,10 @@ exports.getAllPosts = async (req, res) => {
         sortCriteria = { createdAt: -1 };
         break;
       case "asc-upvotes":
-        sortCriteria = { upvotes: -1 };
+        sortCriteria = { upvoteCount: 1 }; // Sorting by ascending number of upvotes
         break;
       case "des-upvotes":
-        sortCriteria = { upvotes: 1 };
+        sortCriteria = { upvoteCount: -1 }; // Sorting by descending number of upvotes
         break;
       default:
         sortCriteria = { createdAt: -1 };
@@ -134,6 +137,7 @@ exports.getAllPosts = async (req, res) => {
       url: post?._id,
       comments: post?.comments,
       upvotes: post?.upvotes,
+      upvoteCount: post?.upvoteCount,
       createdAt: post?.createdAt,
       author: {
         username: post?.owner?.username,

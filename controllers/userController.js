@@ -79,6 +79,7 @@ const signup = async (req, res) => {
         email: user.email,
         username: user.username,
         picture: user.picture,
+        upvotedPosts: user.upvotedPosts,
       },
     });
   } catch (error) {
@@ -127,6 +128,7 @@ const login = async (req, res) => {
       email: existingUser.email,
       username: existingUser.username,
       picture: existingUser.picture,
+      upvotedPosts: existingUser.upvotedPosts,
     },
   });
 };
@@ -202,7 +204,9 @@ const sendOTP = async (req, res) => {
     );
     return res.status(200).send({ message: "OTP Sent !" });
   } catch (error) {
-    return res.status(500).send({ message: "OTP Couldn't be sent, try again!" });
+    return res
+      .status(500)
+      .send({ message: "OTP Couldn't be sent, try again!" });
   }
 };
 

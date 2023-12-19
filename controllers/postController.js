@@ -62,12 +62,52 @@ exports.createNewPost = async (req, res) => {
   }
 };
 
+exports.upvoteDoubt = async (req, res) => {
+  const userId = req._id;
+  const { postId } = req.body;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).send({ message: "Post not found" });
+    }
+    const hasUpvoted = post.upvotes.includes(userId);
+
+    if (hasUpvoted) {
+      post.upvotes = post.upvotes.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+      await post.save();
+      const user = await User.findById(userId);
+      user.upvotedPosts = user.upvotedPosts.filter(
+        (id) => id.toString() !== postId
+      );
+      await user.save();
+      return res.json({ message: "Upvote removed successfully" });
+    } else {
+      post.upvotes.push(userId);
+      await post.save();
+      const user = await User.findById(userId);
+      user.upvotedPosts.push(postId);
+      await user.save();
+
+      return res.json({ message: "Post upvoted successfully" });
+    }
+  } catch (error) {
+    return res.status(500).send({ message: "Error upvoting post, try again!" });
+  }
+};
+
 exports.getAllPosts = async (req, res) => {
   const page = req.params.page || 1;
   const pageSize = 10;
   try {
     const skip = (page - 1) * pageSize;
     const posts = await Post.find({})
+      .sort({ createdAt: -1 })
       .skip(skip)
       .limit(pageSize)
       .populate("owner");

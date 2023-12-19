@@ -34,6 +34,7 @@ const UserSchema = mongoose.Schema(
         ref: "Post",
       },
     ],
+    upvotedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
   },
   { timestapms: true }
 );

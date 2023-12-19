@@ -8,7 +8,6 @@ const postSchema = mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     attachments: [{ type: String }],
     comments: [

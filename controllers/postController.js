@@ -67,8 +67,26 @@ exports.getAllPosts = async (req, res) => {
   const pageSize = 10;
   try {
     const skip = (page - 1) * pageSize;
-    const posts = await Post.find({}).skip(skip).limit(pageSize);
-    return res.status(200).send({ allPosts: posts });
+    const posts = await Post.find({})
+      .skip(skip)
+      .limit(pageSize)
+      .populate("owner");
+
+    const sortedPosts = posts.map((post) => {
+      return {
+        title: post?.title,
+        description: post?.description,
+        url: post?._id,
+        comments: post?.comments,
+        upvotes: post?.upvotes,
+        createdAt: post?.createdAt,
+        author: {
+          username: post?.owner?.username,
+          avatar: post?.owner?.picture,
+        },
+      };
+    });
+    return res.status(200).json(sortedPosts);
   } catch (error) {
     return res.status(500).send({ message: "Error retrieving posts!" });
   }

@@ -21,6 +21,7 @@ exports.getDoubt = async (req, res) => {
     if (!post) {
       return res.status(404).send({ message: "Post not Found!" });
     }
+    console.log(doubtId);
     return res.status(200).send({
       title: post.title,
       description: post.description,

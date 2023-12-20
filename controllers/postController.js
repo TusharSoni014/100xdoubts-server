@@ -15,7 +15,7 @@ exports.getMyPosts = async (req, res) => {
 };
 
 exports.getDoubt = async (req, res) => {
-  const { doubtId } = req.body;
+  const doubtId = req.params.id;
   try {
     const post = await Post.findById(doubtId).populate("owner");
     if (!post) {

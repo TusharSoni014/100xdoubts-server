@@ -14,7 +14,7 @@ const postRouter = express.Router();
 
 postRouter.get("/my-posts", verifyToken, getMyPosts);
 postRouter.get("/get-all-posts/:page/:filter", getAllPosts);
-postRouter.post("/get-doubt", verifyToken, getDoubt);
+postRouter.get("/get-doubt/:id", verifyToken, getDoubt);
 postRouter.post("/create", verifyToken, createNewPost);
 postRouter.post("/upvote", verifyToken, upvoteDoubt);
 postRouter.post("/search", verifyToken, searchDoubt);

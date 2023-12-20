@@ -13,8 +13,14 @@ googleRouter.get(
   "/callback",
   passport.authenticate("google", {
     failureMessage: "Google SSO Failed",
-    failureRedirect: `${process.env.FE_URL}/login`,
-    successRedirect: `${process.env.FE_URL}/signon`,
+    failureRedirect:
+      process.env.NODE_ENV === "production"
+        ? "https://www.100xdoubts.online/login"
+        : "http://localhost:5173/login",
+    successRedirect:
+      process.env.NODE_ENV === "production"
+        ? "https://www.100xdoubts.online/signon"
+        : "http://localhost:5173/signon",
   })
 );
 

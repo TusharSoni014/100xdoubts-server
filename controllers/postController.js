@@ -28,6 +28,7 @@ exports.getDoubt = async (req, res) => {
       comments: post.comments,
       upvotes: post.upvotes,
       upvoteCount: post?.upvoteCount,
+      topic: post.topic,
       createdAt: post.createdAt,
       author: {
         username: post.owner.username,
@@ -43,22 +44,24 @@ exports.getDoubt = async (req, res) => {
 
 exports.createNewPost = async (req, res) => {
   const userId = req._id;
-  const { title, description } = req.body;
+  const { title, description, topic } = req.body;
   try {
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
+
     const post = await Post.create({
       title: title,
       description: description,
       owner: userId,
+      topic: topic,
     });
 
     user.myPosts.push(post._id);
     await user.save();
 
-    return res.status(201).send(post);
+    return res.status(201).send({ newPostUrl: post._id });
   } catch (error) {
     return res.status(500).send({ message: "Error creating post!" });
   }
@@ -116,10 +119,10 @@ exports.getAllPosts = async (req, res) => {
         sortCriteria = { createdAt: -1 };
         break;
       case "asc-upvotes":
-        sortCriteria = { upvoteCount: 1 }; // Sorting by ascending number of upvotes
+        sortCriteria = { upvoteCount: 1 };
         break;
       case "des-upvotes":
-        sortCriteria = { upvoteCount: -1 }; // Sorting by descending number of upvotes
+        sortCriteria = { upvoteCount: -1 };
         break;
       default:
         sortCriteria = { createdAt: -1 };
@@ -138,6 +141,7 @@ exports.getAllPosts = async (req, res) => {
       comments: post?.comments,
       upvotes: post?.upvotes,
       upvoteCount: post?.upvoteCount,
+      topic: post?.topic,
       createdAt: post?.createdAt,
       author: {
         username: post?.owner?.username,

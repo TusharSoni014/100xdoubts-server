@@ -3,21 +3,17 @@ const verifyToken = require("../middlewares/verifyToken");
 const {
   getMyPosts,
   createNewPost,
-  getDoubt,
   getAllPosts,
   upvoteDoubt,
   create100,
-  searchDoubt,
 } = require("../controllers/postController");
 
 const postRouter = express.Router();
 
 postRouter.get("/my-posts", verifyToken, getMyPosts);
 postRouter.get("/get-all-posts/:page/:filter", getAllPosts);
-postRouter.get("/get-doubt/:id", getDoubt);
 postRouter.post("/create", verifyToken, createNewPost);
 postRouter.post("/upvote", verifyToken, upvoteDoubt);
-postRouter.post("/search", verifyToken, searchDoubt);
 
 //temporary function for testing purposes
 postRouter.post("/create100", verifyToken, create100);

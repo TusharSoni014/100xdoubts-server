@@ -6,16 +6,7 @@ const postSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    description: {
-      type: String,
-    },
     attachments: [{ type: String }],
-    comments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
-      },
-    ],
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -25,9 +16,6 @@ const postSchema = mongoose.Schema(
     upvoteCount: {
       type: Number,
       default: 0,
-    },
-    topic: {
-      type: String,
     },
   },
   { timestamps: true }

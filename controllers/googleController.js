@@ -9,8 +9,8 @@ const getGoogleUser = async (req, res) => {
     return res.status(200).send({
       username: user.username,
       email: user.email,
-      name: user.name,
       picture: user.picture,
+      upvotedPosts: user.upvotedPosts,
     });
   } catch (error) {
     return res.status(500).send({ message: "Error getting user!" });

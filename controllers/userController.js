@@ -143,16 +143,6 @@ const logout = async (req, res) => {
   }
 };
 
-const userInfo = async (req, res) => {
-  const userId = req._id;
-  try {
-    const user = await User.findById(userId).select("-password -_id -__v");
-    return res.status(200).send({ user: user });
-  } catch (error) {
-    return res.status(500).send({ message: "Error getting user info!" });
-  }
-};
-
 const sendOTP = async (req, res) => {
   const { email, username } = req.body;
   var transporter = nodemailer.createTransport({
@@ -210,6 +200,9 @@ const sendOTP = async (req, res) => {
   }
 };
 
+//-----------------------------//
+// under development functions //
+//-----------------------------//
 const forgotPassword = async (req, res) => {
   const userId = req._id;
   try {
@@ -218,6 +211,7 @@ const forgotPassword = async (req, res) => {
     return res.status(500).send({ message: "Error chaning password" });
   }
 };
+
 const sendResetLink = async (req, res) => {
   const { email } = req.body;
   var transporter = nodemailer.createTransport({
@@ -254,7 +248,6 @@ module.exports = {
   signup,
   login,
   logout,
-  userInfo,
   sendOTP,
   forgotPassword,
   sendResetLink,

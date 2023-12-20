@@ -170,3 +170,16 @@ exports.create100 = async (req, res) => {
     return res.status(500).send({ message: "Error retrieving posts!" });
   }
 };
+
+exports.searchDoubt = async (req, res) => {
+  const { searchText } = req.body;
+  try {
+    const posts = await Post.find({
+      title: { $regex: searchText, $options: "i" },
+    });
+    return res.status(200).send(posts);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: "Error getting search!" });
+  }
+};
